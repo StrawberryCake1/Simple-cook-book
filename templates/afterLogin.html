@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %} Home page {% endblock %}
+{% block content %}
+<title>After login</title>
+<div class="flex items-center flex-col">
+    <p class="mb-2">Create your own recipe</p>
+    <a href="/createRecipe">
+        <button class="h-10 px-5 m-2 text-gray-100 transition-colors duration-150 bg-gray-700 rounded-lg focus:shadow-outline hover:bg-gray-800">cr</button>
+    </a>
+</div>
+<div class="flex items-center flex-col">
+  <p class="mb-2">Statistics</p>
+  <a href="/statistics">
+    <button class="h-10 px-5 m-2 text-gray-100 transition-colors duration-150 bg-gray-700 rounded-lg focus:shadow-outline hover:bg-gray-800">stats</button>
+  </a>
+{% endblock %}

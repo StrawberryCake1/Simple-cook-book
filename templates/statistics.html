@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %} Statistics {% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+</head>
+<body>
+    <h1>Statistics</h1>
+    <img src="{{ image_url }}" alt="Statistics Plot" style="max-width: 100%; height: auto;">
+    <br>
+    <a href="/download-statistics">Download Statistics Plot</a>
+</body>
+</html>
+{% endblock %}

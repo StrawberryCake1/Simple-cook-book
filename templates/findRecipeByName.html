@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %} Find recipe by name {% endblock %}
+{% block content %}
+<title>Find recipe by name</title>      
+<p>Write the name of your recipe that you want to find</p>
+<div id="divOne">
+    <label for="input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Small input</label>
+    <input type="text" id="input" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+    <button onclick="onSubmit()" id="btn" class="h-10 px-5 m-2 text-gray-100 transition-colors duration-150 bg-gray-700 rounded-lg focus:shadow-outline hover:bg-gray-800">Find</button>
+</div> 
+<script>
+    async function onSubmit() {
+        //.trim() deletes whitespaces
+        const inputValue = document.getElementById("input").value.trim();
+        console.log(inputValue);
+        //text input is empty
+        if (!inputValue) {
+            alert("Please enter a recipe name !");
+            //just return will end code
+            return;
+        }
+
+        try {
+            //fetch request api database for recipe
+            const response = await fetch(
+                //api link + encoded inputValue
+                "api/search?q=" + encodeURIComponent(inputValue)
+            );
+            //Something went wrong
+            if (!response.ok) {
+                alert("Something went wrong. Please try again later !");
+                return;
+            }
+            //data what we got from api 
+            const data = await response.json();
+            console.log(data);
+            //no data found
+            if (!data.meals || data.meals.length === 0) {
+                alert("No recipes found for your search !");
+                return;
+            }
+
+            const element = document.getElementById("divOne");
+
+            //Deleting last data
+            const existingResults = document.querySelectorAll("#divOne p.recipe, #divOne ul.ingredients");
+            existingResults.forEach(el => el.remove());
+
+            //Vieving recipes
+            data.meals.forEach(meal => {
+                //Viewing name
+                const recipeName = document.createElement("p");
+                recipeName.textContent = `Recipe: ${meal.strMeal}`;
+                recipeName.className = "recipe"; 
+                element.appendChild(recipeName);
+
+                //Viewing ingridients
+                const ingredientsList = document.createElement("ul");
+                ingredientsList.className = "ingredients"; 
+
+                for (let i = 1; i <= 20; i++) { 
+                    const ingredient = meal[`strIngredient${i}`];
+                    const measure = meal[`strMeasure${i}`];
+
+                    if (ingredient && ingredient.trim() !== "") {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = `${ingredient}${measure ? ` - ${measure}` : ""}`;
+                        ingredientsList.appendChild(listItem);
+                    }
+                }
+                element.appendChild(ingredientsList);
+
+                //Viewing instructions
+                const recipeInstructions = document.createElement("p");
+                recipeInstructions.textContent = `Instructions: ${meal.strInstructions}`;
+                recipeInstructions.className = "recipe";
+                element.appendChild(recipeInstructions);
+
+            });
+
+        } catch (error) {
+            console.error("Error fetching recipes !:", error);
+            alert("An error occurred. Please check your connection or try again later !");
+        }
+    }
+</script>
+{% endblock %}
